@@ -73,7 +73,7 @@ This code uses several packages. You'll need to have installed:
 - Matplotlib
 - imageio
 
-To install the relevant packages, run pip install -r requirements.txt
+To install the relevant packages, run ```pip install -r requirements.txt```
 
 To run the analysis, you should run the main.py file. 
 
