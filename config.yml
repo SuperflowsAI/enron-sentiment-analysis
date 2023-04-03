@@ -1,0 +1,5 @@
+build_analysis: False
+make_plots: True
+plot_savepath: r'./plots/sentiment/'
+
+
