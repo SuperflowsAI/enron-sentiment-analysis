@@ -1,5 +1,6 @@
 import requests
 from tqdm import tqdm
+from utils.loadsave_emails import *
 
 def download_file(url, local_path):
     with requests.get(url, stream=True) as r:
@@ -22,3 +23,7 @@ local_extract_path = "enron_dataset"
 # Download the dataset
 print("Downloading the Enron email dataset...")
 download_file(url, local_zip_path)
+
+emails = get_emails_from_directory(local_extract_path)
+
+save_emails_to_json(emails, r'./data/enron_dataset/enron_dataset.json')

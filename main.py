@@ -1,14 +1,18 @@
-from config import *
+import yaml
 
-email_path = "./data/enron_dataset/maildir"
-embeddings_folder_path = "./data/embeddings"
+with open("config.yml") as f:
+    config = yaml.load(f, Loader=yaml.FullLoader)
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    if config.build_analysis:
+    if config['download_dataset']:
+        import utils.download_enron_dataset
 
-        print('NEED TO SETUP BUILD ANALYSIS RUN')
+    if config['build_analysis']:
+        import utils.build_emotion_score_df
 
-    if config.make_plots:
-        print('NEED TO SETUP MAKE PLOTS RUN')
+    if config['make_sentiment_plots']:
+        import utils.sentiment_through_time
+
+    if config['make_share_plots']:
+        import utils.share_price
 

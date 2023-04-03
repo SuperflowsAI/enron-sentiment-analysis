@@ -2,10 +2,13 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import imageio
 from math import pi
-from config import *
+import yaml
+
+with open("config.yml") as f:
+    config = yaml.load(f, Loader=yaml.FullLoader)
 
 ### Set path to save out plots
-plots_filepath = config.plot_savepath
+plots_filepath = config['plot_savepath']
 
 def get_yearmonth(date):
     '''
@@ -147,28 +150,28 @@ def apply_exponential(values, factor):
     return [v ** factor for v in values]
 
 
-if not config.build_analysis:
+if not config['build_analysis']:
+    print('Not building analysis from scratch. Attempting to load dataframe.')
     try:
         emails_df
     except:
         email_df_path = ("./data/sentiment/email_sentiment_df.pkl")
         emails_df = pd.read_pickle(email_df_path)
 
-if config.build_analysis:
-    from utils.build_emotion_score_df import *
+if config['build_analysis']:
+    print('Config says to build analysis from scratch.')
+    yn = input('This can take a while. Are you sure you want to proceed? (y/n')
 
+    if yn == 'y':
+        import utils.build_emotion_score_df
 
+    else:
+        raise(f'Output was {yn}, not y. Not building from scratch. Exiting.')
 
 exponential_factor = 2
 num_intermediate_frames = 5
 
-categories = ['joy','anticipation', 'surprise', 'anger', 'disgust', 'fear', 'sadness', 'trust']
-
-for emotion in categories:
-    column_name = 'len_norm_' + emotion
-    emails_df[column_name] = emails_df.apply(get_length_normalised_emotion,
-                                             args=(emotion,),
-                                             axis=1)
+print(emails_df.head())
 
 monthly_df = emails_df.groupby(emails_df['year_month'])
 
@@ -185,6 +188,7 @@ excluded_dates = ['1979-12', '1986-04', '1986-05', '2002-09',
 img_files = []
 
 ### Compute baselines for each emotion
+categories = ['joy', 'anticipation', 'surprise', 'anger', 'disgust', 'fear', 'sadness', 'trust']
 emotion_baselines = {}
 
 for category in categories:
@@ -195,6 +199,13 @@ for category in categories:
 max_value = 0
 monthly_emotions = {}
 
+for col in emails_df.columns:
+    print(col)
+
+if 'email_length' not in emails_df:
+    from utils.build_emotion_score_df import get_email_length
+    emails_df['email_length'] = emails_df.apply(get_email_length, axis=1)
+
 for idx, row in monthly_df:
 
     if idx in excluded_dates:
@@ -204,8 +215,6 @@ for idx, row in monthly_df:
     row = row[row['email_length'] > 10][row['email_length'] < 500]
 
     values = [row[emotion].mean() / emotion_baselines[emotion] for emotion in categories]
-
-    net_positive = row['positive'].mean() - row['negative'].mean()
 
     norm_values = [float(i)/sum(values) for i in values]
 

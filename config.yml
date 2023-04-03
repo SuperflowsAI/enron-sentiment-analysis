@@ -1,5 +1,7 @@
 build_analysis: False
-make_plots: True
-plot_savepath: r'./plots/sentiment/'
+make_sentiment_plots: True
+make_share_plots: True
+download_dataset: False
+plot_savepath: './plots/sentiment/'
 
 

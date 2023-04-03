@@ -1,26 +1,12 @@
 import pandas as pd
 from utils.loadsave_emails import *
+import yaml
+
+with open("config.yml") as f:
+    config = yaml.load(f, Loader=yaml.FullLoader)
 
 nrc_lexicon_path = './data/sentiment/NRC-Emotion-Lexicon/NRC-Emotion-Lexicon-Wordlevel-v0.92.txt'
 
-### Load emails if not already loaded
-try: enron_dataset
-except:
-    filepath = r"./data/enron_dataset/enron_dataset.json"
-    enron_dataset = load_emails_from_json(filepath)
-
-### Load emails_df processed data if not already loaded
-try:
-    emails_df
-except:
-    emails_df = pd.DataFrame.from_dict(enron_dataset)
-
-### Load emotion processed data if not already loaded
-try:
-    emotion_dict
-except:
-    print('Loading NRC Lexicon Dictionary')
-    preprocess_nrc_lexicon(nrc_lexicon_path)
 
 def preprocess_nrc_lexicon(file_path):
     nrc_data = pd.read_csv(file_path, names=["word", "emotion", "association"], sep='\t')
@@ -101,6 +87,7 @@ def get_length_normalised_emotion(row, emotion):
 
 def processes_emails_dataframe(emails_df, emotion_dict):
     # Get emotion scores for each email, then unpack into dataframe
+
     emails_df['emotion_scores'] = emails_df['body'].progress_apply(lambda x: get_emotion_scores(x, emotion_dict))
     emails_df[['anger', 'anticipation', 'disgust', 'fear', 'joy',
             'negative', 'positive', 'sadness', 'surprise', 'trust']] = emails_df.emotion_scores.tolist()
@@ -116,6 +103,14 @@ def processes_emails_dataframe(emails_df, emotion_dict):
     # Drop rows with invalid datetime values
     emails_df = emails_df.dropna(subset=['date'])
 
+    categories = ['joy', 'anticipation', 'surprise', 'anger', 'disgust', 'fear', 'sadness', 'trust']
+
+    for emotion in categories:
+        column_name = 'len_norm_' + emotion
+        emails_df[column_name] = emails_df.apply(get_length_normalised_emotion,
+                                                 args=(emotion,),
+                                                 axis=1)
+
     # Remove timezone information
     emails_df['date'] = emails_df['date'].apply(lambda x: x.replace(tzinfo=None))
 
@@ -128,5 +123,23 @@ def processes_emails_dataframe(emails_df, emotion_dict):
 
     return emails_df
 
-emails_df = processes_emails_dataframe(emails_df, emotion_dict)
-emails_df.to_pickle("./data/sentiment/email_sentiment_df.pkl")
+
+
+if config['build_analysis']:
+    ### Load emails if not already loaded
+    try: enron_dataset
+    except:
+        filepath = r"./data/enron_dataset/enron_dataset.json"
+        enron_dataset = load_emails_from_json(filepath)
+
+    ### Load emails_df processed data if not already loaded
+    emails_df = pd.DataFrame.from_dict(enron_dataset)
+    ### Load emotion processed data if not already loaded
+    try:
+        emotion_dict
+    except:
+        print('Loading NRC Lexicon Dictionary')
+        preprocess_nrc_lexicon(nrc_lexicon_path)
+
+    emails_df = processes_emails_dataframe(emails_df, emotion_dict)
+    emails_df.to_pickle("./data/sentiment/email_sentiment_df.pkl")
