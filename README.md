@@ -61,7 +61,7 @@ To run the analysis from scratch, set the variables in the config file:
 - make_sentiment_plots
 - make_share_plots
 
-By default, ```build_analysis``` is ```False```, and make_plots is ```True```.
+By default, ```build_analysis``` is ```False```, and ```make_plots``` is ```True```.
 
 If you'd like to build the analysis from scratch, set ```build_analysis``` to True. 
 
