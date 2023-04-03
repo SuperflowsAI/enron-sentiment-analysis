@@ -38,13 +38,17 @@ enron-sentiment-analysis/
 │           └──NRC-Emotion-Lexicon-Wordlevel-v0.92.txt
 │       └──email_sentiment_df.pkl
 │   └──  enron_stockprice/
+│       └──ENRON_stock_prices.csv
 ├── utils/
-│   ├── build_emotion_score.py
+│   ├── build_emotion_score_df.py
+│   ├── download_enron_dataset.py
 │   ├── share_price.py
 │   ├── sentiment_through_time.py
 │   └── loadsave_emails.py
 ├── plots/
-│   └──  enron_stockprice
+│   ├── sentiment
+│       └── Images for sentiment gif
+│   └── enron_stockprice
 │       ├──frames/
 │           └──Frames of stock price gif
 │       └──enron_rolling_plot.gif
