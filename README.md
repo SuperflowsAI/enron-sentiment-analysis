@@ -23,6 +23,7 @@ The structure of the code is:
 ```
 enron-sentiment-analysis/
 ├── README.md           # overview of the project
+├── main.py
 ├── requirements.txt    # software requirements and dependencies
 ├── config.yml          # settings for running the code
 ├── data/               # data files used in the project
