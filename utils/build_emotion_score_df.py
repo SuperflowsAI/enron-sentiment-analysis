@@ -130,7 +130,11 @@ if config['build_analysis']:
     try: enron_dataset
     except:
         filepath = r"./data/enron_dataset/enron_dataset.json"
-        enron_dataset = load_emails_from_json(filepath)
+        try:
+            enron_dataset = load_emails_from_json(filepath)
+        except:
+            raise(f'Failed to load dataset. It may not be downloaded. Or it may be in an unexpected from. '
+                  f'Check {filepath} to see.')
 
     ### Load emails_df processed data if not already loaded
     emails_df = pd.DataFrame.from_dict(enron_dataset)

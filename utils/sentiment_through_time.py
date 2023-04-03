@@ -149,14 +149,19 @@ def draw_radar_plot(categories, values, max_value, date_str, filename):
 def apply_exponential(values, factor):
     return [v ** factor for v in values]
 
-
+# Only build if the flag in config.yml is set to true
 if not config['build_analysis']:
     print('Not building analysis from scratch. Attempting to load dataframe.')
     try:
         emails_df
     except:
         email_df_path = ("./data/sentiment/email_sentiment_df.pkl")
-        emails_df = pd.read_pickle(email_df_path)
+        try:
+            emails_df = pd.read_pickle(email_df_path)
+        except:
+            raise(f'Could not read pickle file. It may not exist. You should see it in {email_df_path}. '
+                  f'If not, change the config.yml file to build the analysis. You may also need to change the'
+                  f' download data flag and download the Enron dataset.')
 
 if config['build_analysis']:
     print('Config says to build analysis from scratch.')
@@ -170,8 +175,6 @@ if config['build_analysis']:
 
 exponential_factor = 2
 num_intermediate_frames = 5
-
-print(emails_df.head())
 
 monthly_df = emails_df.groupby(emails_df['year_month'])
 
@@ -199,13 +202,11 @@ for category in categories:
 max_value = 0
 monthly_emotions = {}
 
-for col in emails_df.columns:
-    print(col)
-
 if 'email_length' not in emails_df:
     from utils.build_emotion_score_df import get_email_length
     emails_df['email_length'] = emails_df.apply(get_email_length, axis=1)
 
+### Go through each month of the dataframe grouped by month and compute the aggregated emotions
 for idx, row in monthly_df:
 
     if idx in excluded_dates:
@@ -215,7 +216,6 @@ for idx, row in monthly_df:
     row = row[row['email_length'] > 10][row['email_length'] < 500]
 
     values = [row[emotion].mean() / emotion_baselines[emotion] for emotion in categories]
-
     norm_values = [float(i)/sum(values) for i in values]
 
     if max(norm_values) == 1:
@@ -230,6 +230,7 @@ for idx, row in monthly_df:
 previous_idx = None
 previous_values = None
 
+### Go through the emotions by month and create the relevant plots
 for idx in monthly_emotions:
 
     img_filename = f'radar_plot_midemails_{idx}.png'
@@ -237,6 +238,7 @@ for idx in monthly_emotions:
 
     exp_values = apply_exponential(monthly_emotions[idx], exponential_factor)
 
+    ### Generate intermediate frames so the gif doesn't jump around as much
     if previous_values is not None:
         intermediate_frames = generate_intermediate_frames(previous_values, exp_values, num_intermediate_frames)
         for i, intermediate_values in enumerate(intermediate_frames):
@@ -250,7 +252,7 @@ for idx in monthly_emotions:
     previous_idx = idx
     previous_values = exp_values
 
-### Save out as a gif
+### Create gif of frames we just produced
 with imageio.get_writer(plots_filepath + 'sentiment_radar_midemails_plot.gif', mode='I', duration=0.2) as writer:
     for img_file in img_files:
         image = imageio.imread(img_file)

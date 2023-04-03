@@ -2,7 +2,6 @@ import os
 import email
 from email.policy import default
 
-
 def parse_raw_email(raw_email):
     parsed_email = email.message_from_string(raw_email, policy=default)
     subject = str(parsed_email["subject"]) or ""
