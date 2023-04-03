@@ -15,13 +15,13 @@ To provide context, the share price is also plotted. This was aligned manually t
 We wrote up a blog of the story and processing. You can find it here: https://www.superflows.ai/blog/enron-sentiment
 
 ----
+## Code
+
 The structure of the code is:
 ```
 enron-sentiment-analysis/
 ├── README.md           # overview of the project
 ├── requirements.txt    # software requirements and dependencies
-├── share_price.py
-├── sentiment_through_time.py
 ├── data/               # data files used in the project
 │   ├──  enron_dataset/
 │       ├──maildir/
@@ -37,6 +37,8 @@ enron-sentiment-analysis/
 │   └──  enron_stockprice/
 ├── utils/
 │   ├── build_emotion_score.py
+│   ├── share_price.py
+│   ├── sentiment_through_time.py
 │   └── loadsave_emails.py
 ├── plots/
 │   └──  enron_stockprice
@@ -55,14 +57,14 @@ To run the analysis from scratch, set the variables in the config file:
 We've created a pandas dataframe with the completed analysis, saved as a .pickle file. You can simply load this file
 and run the rest of the code. 
 
-By default, build_analysis is False, and make_plots is True.
+By default, ```build_analysis``` is ```False```, and make_plots is ```True```.
 
-If you do not have 'build_analysis' set to True, the pickle file will be loaded by default
+If you do not have ```build_analysis``` set to True, the pickle file will be loaded by default
 
-If you'd like to build the analysis from scratch, set '''build_analysis''' to True. 
+If you'd like to build the analysis from scratch, set ```build_analysis``` to True. 
 
 ----
-Installation 
+## Installation 
 
 This code uses several packages. You'll need to have installed:
 - Pandas
