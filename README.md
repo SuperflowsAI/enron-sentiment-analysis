@@ -1,6 +1,8 @@
 # Enron Sentiment Analysis
 
-This code is written by the team at Superflows. Check it out if you spend too long in your emails inbox.
+This code is written by the team at (Superflows)[https://www.superflows.ai/]. Check it out if you spend too long in your emails inbox.
+
+We wrote up a blog of the story and processing. You can find it here: https://www.superflows.ai/blog/enron-sentiment
 
 The Enron dataset is an extensive corpus of over 500,000 internal emails at the company, spanning the period it's collapse. 
 
@@ -14,7 +16,17 @@ This code uses the NRC Emotion Lexicon to analyse the emotional shifts within th
 
 To provide context, the share price is also plotted. This was aligned manually to the month being shown in radar plots after production. 
 
-We wrote up a blog of the story and processing. You can find it here: https://www.superflows.ai/blog/enron-sentiment
+----
+## Installation and running
+
+This code uses several packages. You'll need to have installed:
+- Pandas
+- Matplotlib
+- imageio
+
+To install the relevant packages, run ```pip install -r requirements.txt```
+
+To run the analysis, you should run use this command: ```python main.py```
 
 ----
 ## Code
@@ -69,16 +81,4 @@ To run the analysis from scratch, set the variables in the config file:
 By default, ```build_analysis``` is ```False```, and ```make_plots``` is ```True```.
 
 If you'd like to build the analysis from scratch, set ```build_analysis``` to True. 
-
-----
-## Installation 
-
-This code uses several packages. You'll need to have installed:
-- Pandas
-- Matplotlib
-- imageio
-
-To install the relevant packages, run ```pip install -r requirements.txt```
-
-To run the analysis, you should run the main.py file. 
 
