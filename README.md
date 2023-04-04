@@ -1,8 +1,8 @@
 # Enron Sentiment Analysis
 
-This code is written by the team at (Superflows)[https://www.superflows.ai/]. Check it out if you spend too long in your emails inbox.
+This code is written by the team at [Superflows](https://www.superflows.ai/). Check it out if you spend too long in your emails inbox.
 
-We wrote up a blog of the story and processing. You can find it here: https://www.superflows.ai/blog/enron-sentiment
+We wrote up a blog of the story and processing. You can find [the blog here](https://www.superflows.ai/blog/enron-sentiment).
 
 The Enron dataset is an extensive corpus of over 500,000 internal emails at the company, spanning the period it's collapse. 
 
