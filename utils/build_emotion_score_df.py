@@ -3,7 +3,7 @@ from utils.loadsave_emails import *
 import yaml
 
 with open("config.yml") as f:
-    config = yaml.load(f, Loader=yaml.FullLoader)
+    config = yaml.safe_load(f)
 
 nrc_lexicon_path = './data/sentiment/NRC-Emotion-Lexicon/NRC-Emotion-Lexicon-Wordlevel-v0.92.txt'
 
@@ -146,4 +146,5 @@ if config['build_analysis']:
         preprocess_nrc_lexicon(nrc_lexicon_path)
 
     emails_df = processes_emails_dataframe(emails_df, emotion_dict)
-    emails_df.to_pickle("./data/sentiment/email_sentiment_df.pkl")
+    with open(os.path.join(".", "data", "sentiment", "email_sentiment_df.pkl"), 'wb') as f:
+        emails_df.to_pickle(f)
